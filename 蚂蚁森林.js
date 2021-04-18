@@ -1,0 +1,107 @@
+// 检测无障碍服务是否打开
+auto();
+// 测试机: 小米10的屏幕尺寸 (width x height)
+setScreenMetrics(1080, 2340);
+
+const findEnergyBtn = { x: 960, y: 1560 };
+const energyBasicLine = { x: 220, y: 680 };
+
+//启用按键监听
+events.observeKey();
+//监听音量上键按下
+events.onKeyDown("volume_down", function (event) {
+    log("脚本手动退出");
+    exit();
+});
+
+function log(msg) {
+    toast(msg);
+    console.log(msg)
+}
+
+/**
+ * 点击某个坐标并延迟一定时间
+ * @param {点击的x坐标} x 
+ * @param {点击的y坐标} y 
+ */
+function clickWithDelay(x, y) {
+    click(x, y);
+    sleep(100);
+}
+
+/**
+ * 收取当前页面的所有能量
+ */
+function collectEnergy() {
+    // 以该坐标为水平基准线，每个x值，分别点击+-50 y三次
+    var x = energyBasicLine.x;
+    var y = energyBasicLine.y;
+    while (x <= 900) {
+        clickWithDelay(x, y - 50);
+        clickWithDelay(x, y);
+        clickWithDelay(x, y + 50);
+        x += 120
+    }
+}
+
+/**
+ * 打开支付宝，并进入蚂蚁森林我的主页
+ */
+function enterMyMainPage() {
+    launchApp("Alipay");
+    sleep(2000);
+    var antForestText = text("Ant Forest").findOne(1000);
+    if (antForestText != null) {
+        antForestText.parent().parent().click();
+    } else {
+        log("无法找到蚂蚁森林按钮");
+        exit();
+    }
+    // 等待自己页面加载完成 (findOne会阻塞直到找到)
+    text("找能量").findOne();
+    sleep(500);
+}
+
+/**
+ * 不断点击“找能量”按钮，收取每个好友的能量
+ */
+function collectFriendEnergy() {
+    while (true) {
+        // 好友界面的"找能量"按钮无法识别，使用绝对坐标
+        clickWithDelay(findEnergyBtn.x, findEnergyBtn.y);
+        sleep(1500);
+        var finish = textContains("返回我的森林").findOnce();
+        if (finish != null) {
+            // 已收完所有能量
+            finish.click();
+            break;
+        } else {
+            // 收集好友能量
+            collectEnergy();
+        }
+    }
+}
+
+function complete () {
+    back();
+    sleep(500);
+    back();
+    sleep(500);
+    home();
+}
+
+function main() {
+    // 从主页进入蚂蚁森林主页
+    enterMyMainPage();
+    // 收集自己的能量
+    log("收集自己能量");
+    collectEnergy();
+    // 收集好友的能量
+    log("收集好友能量");
+    collectFriendEnergy();
+    log("完成");
+    // 结束后返回主页面
+    complete();
+}
+
+main();

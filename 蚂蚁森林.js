@@ -88,6 +88,7 @@ function complete () {
     back();
     sleep(500);
     home();
+    exit();
 }
 
 function main() {

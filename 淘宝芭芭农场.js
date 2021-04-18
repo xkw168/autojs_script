@@ -70,7 +70,7 @@ function goFarmPage () {
     }
     waitForActivity("com.taobao.browser.BrowserActivity");
     // 等待页面加载完成
-    sleep(3000);
+    sleep(5000);
 }
 
 function dailySignIn () {
@@ -114,7 +114,7 @@ function fertilizeTree () {
         x: (871 + 1056) / 2,
         y: (1576 + 1761) / 2
     };
-    clickPointWithDelay(collecrCoor, 500);
+    clickPointWithDelay(collecrCoor, 1500);
     // 每日签到
     dailySignIn();
     // 观看广告

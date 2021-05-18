@@ -23,7 +23,7 @@ const fertilizerBtn = {
     x: 900, 
     signInY: 926, 
     chickY: 1700, 
-    adY: 1470 
+    adY: 910 
 };
 
 events.observeKey();
@@ -110,14 +110,14 @@ function getDailyFertilize() {
 function watchAd() {
     // 向上滑动显示广告选项
     // (x1, y1, x2, y2, duration)
-    swipe(300, 1900, 300, 800, 300);
+    swipe(300, 1900, 300, 200, 500);
     // 可以观看三次广告
     var i = 0;
     while (i < 3) {
         clickWithDelay(fertilizerBtn.x, fertilizerBtn.adY);
         sleep(AD_DURATION);
         backWithDelay();
-        toastLog("看完" + i + "次广告");
+        toastLog("看完" + (i + 1) + "次广告");
         i++;
     }
     backWithDelay();
@@ -163,4 +163,4 @@ function main() {
     complete();
 }
 
-// main();
+main();

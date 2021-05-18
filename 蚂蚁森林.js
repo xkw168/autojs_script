@@ -5,6 +5,8 @@ setScreenMetrics(1080, 2340);
 
 const findEnergyBtn = { x: 960, y: 1560 };
 const energyBasicLine = { x: 220, y: 680 };
+// 有些玩家会有装扮，点到装扮会弹出一个窗口，该坐标为取消坐标
+const cancelTree = {x: 545, y: 1865};
 
 //启用按键监听
 events.observeKey();
@@ -32,7 +34,7 @@ function clickWithDelay(x, y) {
 /**
  * 收取当前页面的所有能量
  */
-function collectEnergy() {
+function collectEnergy(withCancel) {
     // 以该坐标为水平基准线，每个x值，分别点击+-50 y三次
     var x = energyBasicLine.x;
     var y = energyBasicLine.y;
@@ -40,7 +42,10 @@ function collectEnergy() {
         clickWithDelay(x, y - 50);
         clickWithDelay(x, y);
         clickWithDelay(x, y + 50);
-        x += 120
+        x += 120;
+        if (withCancel) {
+            clickWithDelay(cancelTree.x, cancelTree.y);
+        }
     }
 }
 
@@ -63,22 +68,33 @@ function enterMyMainPage() {
 }
 
 /**
+ * 判断是否已经收取完所有的能量
+ */
+function isFinish() {
+    var finish = textContains("返回蚂蚁森林").findOnce();
+    if (finish != null) {
+        // 已收完所有能量
+        finish.click();
+        sleep(1500);
+    }
+    return finish != null;
+}
+
+/**
  * 不断点击“找能量”按钮，收取每个好友的能量
  */
 function collectFriendEnergy() {
     while (true) {
         // 好友界面的"找能量"按钮无法识别，使用绝对坐标
         clickWithDelay(findEnergyBtn.x, findEnergyBtn.y);
+        // 等待页面加载完成
         sleep(1500);
-        var finish = textContains("返回我的森林").findOnce();
-        if (finish != null) {
-            // 已收完所有能量
-            finish.click();
+        // 检查是否是结束页面
+        if (isFinish()) {
             break;
-        } else {
-            // 收集好友能量
-            collectEnergy();
         }
+        // 收集好友能量
+        collectEnergy(true);
     }
 }
 
@@ -96,7 +112,7 @@ function main() {
     enterMyMainPage();
     // 收集自己的能量
     log("收集自己能量");
-    collectEnergy();
+    collectEnergy(false);
     // 收集好友的能量
     log("收集好友能量");
     collectFriendEnergy();

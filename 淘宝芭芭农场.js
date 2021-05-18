@@ -70,7 +70,7 @@ function goFarmPage () {
     }
     waitForActivity("com.taobao.browser.BrowserActivity");
     // 等待页面加载完成
-    sleep(5000);
+    sleep(8000);
 }
 
 function dailySignIn () {
@@ -87,6 +87,9 @@ function watchAd () {
     var adBtn = textContains("精选好物").findOne(1000);
     if (adBtn != null) {
         adBtn.click();
+        sleep(1000);
+        // 滑动一下才开始计算广告时间
+        swipe(500, 1500, 300, 1500, 300);
         sleep(AD_DURATION);
         backWithDelay();
     } else {

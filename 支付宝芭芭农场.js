@@ -6,24 +6,24 @@
 
 // 检测无障碍服务是否打开
 auto();
-// 测试机: 小米10的屏幕尺寸 (width x height)
-setScreenMetrics(1080, 2340);
+// 测试机: 红米K40的屏幕尺寸 (width x height)
+setScreenMetrics(1080, 2400);
 
 // 广告等待时长 (多等5秒以防万一)
 const AD_DURATION = 20 * 1000
 // 芭芭农场
-const farmTree = { x: 100, y: 1150 };
+const farmTree = { x: 100, y: 1240 };
 // 领取肥料
-const getFertilizerBtn = { x: 950, y: 1800 };
+const getFertilizerBtn = { x: 950, y: 1945 };
 // 领取肥料界面按钮
 // signInY: 每日签到饲料
 // chickY: 庄园小鸡饲料
 // adY: 看广告拿饲料
 const fertilizerBtn = { 
     x: 900, 
-    signInY: 926, 
-    chickY: 1700, 
-    adY: 910 
+    signInY: 1076, 
+    chickY: 1850, 
+    adY: 1060 
 };
 
 events.observeKey();
@@ -108,13 +108,20 @@ function getDailyFertilize() {
 }
 
 function watchAd() {
+    let swipeDurtaion = 500
     // 向上滑动显示广告选项
     // (x1, y1, x2, y2, duration)
-    swipe(300, 1900, 300, 200, 500);
+    swipe(300, 1900, 300, 200, swipeDurtaion);
+    // wait the swipe action to finish
+    sleep(swipeDurtaion + 300);
     // 可以观看三次广告
     var i = 0;
     while (i < 3) {
         clickWithDelay(fertilizerBtn.x, fertilizerBtn.adY);
+        // 等待广告页面加载完成
+        sleep(1500);
+        // 任意滑动开始观看广告倒计时
+        swipe(300, 1900, 300, 200, swipeDurtaion);
         sleep(AD_DURATION);
         backWithDelay();
         toastLog("看完" + (i + 1) + "次广告");

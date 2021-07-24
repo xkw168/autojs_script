@@ -6,8 +6,8 @@
 
 // 检测无障碍服务是否打开
 auto();
-// 测试机: 小米10的屏幕尺寸 (width x height)
-setScreenMetrics(1080, 2340);
+// 测试机: 红米K40的屏幕尺寸 (width x height)
+setScreenMetrics(1080, 2400);
 
 const AD_DURATION = 20 * 1000
 

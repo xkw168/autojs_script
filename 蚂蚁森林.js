@@ -1,12 +1,14 @@
 // 检测无障碍服务是否打开
 auto();
-// 测试机: 小米10的屏幕尺寸 (width x height)
-setScreenMetrics(1080, 2340);
+// 测试机: 红米K40的屏幕尺寸 (width x height)
+setScreenMetrics(1080, 2400);
 
-const findEnergyBtn = { x: 960, y: 1560 };
-const energyBasicLine = { x: 220, y: 680 };
+// 更多能量按钮
+const findEnergyBtn = { x: 960, y: 1555 };
+// 收取能量的基准线（上下波动50）
+const energyBasicLine = { x: 220, y: 700 };
 // 有些玩家会有装扮，点到装扮会弹出一个窗口，该坐标为取消坐标
-const cancelTree = {x: 545, y: 1865};
+const cancelTree = { x: 545, y: 1940 };
 
 //启用按键监听
 events.observeKey();
@@ -71,7 +73,7 @@ function enterMyMainPage() {
  * 判断是否已经收取完所有的能量
  */
 function isFinish() {
-    var finish = textContains("返回蚂蚁森林").findOnce();
+    var finish = textContains("返回").findOnce();
     if (finish != null) {
         // 已收完所有能量
         finish.click();

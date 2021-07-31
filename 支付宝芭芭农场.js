@@ -80,6 +80,16 @@ function goBBFarmPage() {
     launchApp("Alipay");
     waitForActivity("com.eg.android.AlipayGphone.AlipayLogin")
     sleep(1000);
+    var bbfarmText = text("BABA Farm").findOne(1000);
+    if (bbfarmText != null) {
+        bbfarmText.parent().parent().click();
+    } else {
+        log("无法找到芭芭农场按钮");
+        exit();
+    }
+    sleep(1000);
+    // 修改支付宝首页添加“芭芭农场”按钮后不需要这么麻烦了
+    /*
     var antFarmText = text("Ant Farm").findOne(1000);
     if (antFarmText != null) {
         clickObjWithDelay (antFarmText);
@@ -95,6 +105,7 @@ function goBBFarmPage() {
     textContains("合种更快").waitFor();
     // text("合种更快").findOne(5000);
     sleep(1000);
+    */
 }
 
 // 每日饲料可以多次点击（无副作用）
@@ -107,17 +118,30 @@ function getDailyFertilize() {
     }
 }
 
+// 观看广告
 function watchAd() {
     let swipeDurtaion = 500
-    // 向上滑动显示广告选项
-    // (x1, y1, x2, y2, duration)
-    swipe(300, 1900, 300, 200, swipeDurtaion);
-    // wait the swipe action to finish
-    sleep(swipeDurtaion + 300);
+    // 先找到广告那栏的文字
+    var text = textContains("看精选商品").findOnce()
+    // 如果当前屏幕找不到则滑动
+    if (text == null) {
+        // 向上滑动显示广告选项
+        // (x1, y1, x2, y2, duration)
+        swipe(300, 1900, 300, 200, swipeDurtaion);
+        // wait the swipe action to finish
+        sleep(swipeDurtaion + 300);
+        text = textContains("看精选商品").findOnce()
+    }
+    if (text == null) {
+        toastLog("无法找到广告按钮")
+    }
+    // 计算出广告按钮的Y坐标
+    var b = text.bounds()
+    var coordY = b.top + b.height()
     // 可以观看三次广告
     var i = 0;
     while (i < 3) {
-        clickWithDelay(fertilizerBtn.x, fertilizerBtn.adY);
+        clickWithDelay(fertilizerBtn.x, coordY);
         // 等待广告页面加载完成
         sleep(1500);
         // 任意滑动开始观看广告倒计时
@@ -130,6 +154,18 @@ function watchAd() {
     backWithDelay();
 }
 
+// 领取小鸡生产的饲料
+function getChickenFertilize() {
+    var text = textContains("蚂蚁庄园小鸡").findOnce()
+    if (text == null) {
+        toastLog("无法找到小鸡饲料按钮")
+    }
+    // 计算出领取按钮的Y坐标
+    var b = text.bounds()
+    var coordY = b.top + b.height()
+    clickWithDelay(fertilizerBtn.x, coordY, 1500);
+}
+
 /**
  * 领肥料
  */
@@ -139,7 +175,7 @@ function fertilizeTree() {
     // 领取每日签到饲料
     getDailyFertilize();
     // 蚂蚁庄园小鸡饲料
-    clickWithDelay(fertilizerBtn.x, fertilizerBtn.chickY, 1500);
+    getChickenFertilize();
     // 看广告饲料
     watchAd();
 }

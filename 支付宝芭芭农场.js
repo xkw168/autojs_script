@@ -78,15 +78,16 @@ function clickObjWithDelay (obj, delay) {
  */
 function goBBFarmPage() {
     launchApp("Alipay");
-    waitForActivity("com.eg.android.AlipayGphone.AlipayLogin")
-    sleep(1000);
+    sleep(2000);
     var bbfarmText = text("BABA Farm").findOne(1000);
     if (bbfarmText != null) {
-        bbfarmText.parent().parent().click();
+        bbfarmText.parent().click();
     } else {
         log("无法找到芭芭农场按钮");
         exit();
     }
+    // 等待芭芭农场加载完成
+    textContains("合种更快").waitFor();
     sleep(1000);
     // 修改支付宝首页添加“芭芭农场”按钮后不需要这么麻烦了
     /*

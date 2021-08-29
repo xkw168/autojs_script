@@ -59,7 +59,7 @@ function enterMyMainPage() {
     sleep(2000);
     var antForestText = text("Ant Forest").findOne(1000);
     if (antForestText != null) {
-        antForestText.parent().parent().click();
+        antForestText.parent().click();
     } else {
         log("无法找到蚂蚁森林按钮");
         exit();

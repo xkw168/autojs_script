@@ -8,7 +8,7 @@ const findEnergyBtn = { x: 960, y: 1555 };
 // 收取能量的基准线（上下波动50）
 const energyBasicLine = { x: 220, y: 700 };
 // 有些玩家会有装扮，点到装扮会弹出一个窗口，该坐标为取消坐标
-const cancelTree = { x: 545, y: 1940 };
+const cancelTree = { x: 540, y: 1836 };
 
 //启用按键监听
 events.observeKey();

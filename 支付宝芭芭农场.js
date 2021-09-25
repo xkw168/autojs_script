@@ -119,22 +119,42 @@ function getDailyFertilize() {
     }
 }
 
+
+// 判断是否需要滑动寻找“广告”按钮
+function needScroll(text_element) {
+    // 1. 当前屏幕内没有广告按钮
+    if (text_element == null) {
+        log("当前屏幕找不到\"广告\"按钮")
+        return true
+    }
+    // 计算出广告按钮的Y坐标
+    var b = text_element.bounds()
+    var coordY = b.top + b.height()
+    // 2. 当前屏幕内能获取广告按钮但是超出了点击范围
+    if (coordY > 2200) {
+        log("\"广告\"按钮超出点击范围")
+        return true
+    }
+    return false
+}
+
 // 观看广告
 function watchAd() {
     let swipeDurtaion = 500
     // 先找到广告那栏的文字
     var text = textContains("看精选商品").findOnce()
     // 如果当前屏幕找不到则滑动
-    if (text == null) {
+    if (needScroll(text)) {
         // 向上滑动显示广告选项
         // (x1, y1, x2, y2, duration)
         swipe(300, 1900, 300, 200, swipeDurtaion);
         // wait the swipe action to finish
-        sleep(swipeDurtaion + 300);
+        sleep(1000);
         text = textContains("看精选商品").findOnce()
     }
     if (text == null) {
         toastLog("无法找到广告按钮")
+        exit()
     }
     // 计算出广告按钮的Y坐标
     var b = text.bounds()
@@ -173,10 +193,13 @@ function getChickenFertilize() {
 function fertilizeTree() {
     // 点击领取饲料按钮
     clickPointWithDelay(getFertilizerBtn, 1500);
+    log("点击领取饲料按钮");
     // 领取每日签到饲料
     getDailyFertilize();
+    log("领取每日签到饲料");
     // 蚂蚁庄园小鸡饲料
     getChickenFertilize();
+    log("领取小鸡庄园饲料")
     // 看广告饲料
     watchAd();
 }
